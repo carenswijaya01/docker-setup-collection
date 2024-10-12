@@ -1,0 +1,13 @@
+services:
+  app:
+    container_name: ${CONTAINER_NAME}
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: "${IMAGE_NAME}:${TAG}"
+    cap_drop:
+      - ALL
+    security_opt:
+      - "no-new-privileges=true"
+    volumes:
+      - ./:/var/www/html
