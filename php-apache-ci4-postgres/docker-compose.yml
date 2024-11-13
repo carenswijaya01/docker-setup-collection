@@ -11,3 +11,5 @@ services:
       - "no-new-privileges=true"
     volumes:
       - ./:/var/www/html
+    command: sh -c "composer install && apache2-foreground"
+

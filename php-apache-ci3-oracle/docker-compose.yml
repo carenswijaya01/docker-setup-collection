@@ -1,15 +1,14 @@
 services:
   app:
-    container_name: ${CONTAINER_NAME}
+    container_name: php-ci3-oracle
     build:
       context: .
       dockerfile: .docker/Dockerfile
-    image: "${IMAGE_NAME}:${TAG}"
+    image: "php-ci3-oracle:latest"
     cap_drop:
       - ALL
     security_opt:
       - "no-new-privileges=true"
     volumes:
       - ./:/var/www/html
-    command: sh -c "composer install && apache2-foreground"
-
+    command: sh -c "apache2-foreground"
