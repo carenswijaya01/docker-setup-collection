@@ -4,9 +4,7 @@ FROM php:7.2-apache
 WORKDIR /var/www/html
 
 # Copy all (exclude by .dockerignore) to /var/www/html
-COPY ./.docker .
-COPY ./oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm .
-COPY ./oracle-instantclient11.2-devel-11.2.0.4.0-1.x86_64.rpm .
+COPY . .
 
 # Configure Apache
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
