@@ -6,8 +6,9 @@ services:
       dockerfile: .docker/Dockerfile
     image: "${IMAGE_NAME}:${TAG}"
     ports:
-      - "${PORT}:443"
-      - "${PORT}:443/udp"
+      - "${PORT}:80"
+      - "${PORT_HTTPS}:443"
+      - "${PORT_HTTPS}:443/udp"
     cap_drop:
       - ALL
     cap_add:
