@@ -24,7 +24,7 @@ COPY . /app
 COPY --from=vendor /app/vendor/ /app/vendor/
 COPY --from=vendor /usr/bin/composer /usr/bin/composer
 
-RUN install-php-extensions intl mbstring pdo pdo_pgsql pgsql && \
+RUN install-php-extensions intl mbstring pdo pdo_mysql mysqli && \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/* && \
     adduser -D -s /bin/sh ${USER} && \
     chown -R ${USER}:${USER} /data/caddy && chown -R ${USER}:${USER} /config/caddy && \
