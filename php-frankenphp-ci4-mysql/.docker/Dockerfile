@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy all (exclude by .dockerignore) to /var/www/html
 COPY composer.json composer.json
-COPY composer.lock composer.lock
+# COPY composer.lock composer.lock
 
 RUN composer install \
     --no-dev \

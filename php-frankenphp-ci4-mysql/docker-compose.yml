@@ -17,4 +17,4 @@ services:
       - "no-new-privileges=true"
     volumes:
       - ./:/app
-    command: sh -c "composer install && frankenphp run"
+    command: sh -c "composer install --no-dev --ignore-platform-reqs --no-interaction --no-plugins --no-scripts --prefer-dist && frankenphp run && frankenphp run"
