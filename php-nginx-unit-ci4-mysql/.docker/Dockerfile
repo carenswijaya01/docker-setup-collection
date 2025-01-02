@@ -22,7 +22,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     zip \
     unzip && \
-    cp env .env && \
     # -- PHP Ext
     docker-php-ext-install intl mbstring pdo pdo_mysql mysqli && \
     # docker-php-ext-configure gd && \

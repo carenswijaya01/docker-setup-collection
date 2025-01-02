@@ -18,7 +18,7 @@ ENV ORACLE_HOME=/usr/lib/oracle/11.2/client64
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # -- mbstring lib
-    libonig-dev \ 
+    libonig-dev \
     # -- gd lib
     # libpng-dev \
     # libjpeg-dev \
@@ -35,7 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release \
     zip \
     unzip && \
-    cp env .env && \
     # -- Oracle Installation
     alien -i --scripts ./oracle-instantclient11.2-basic-11.2.0.4.0-1.x86_64.rpm && \
     alien -i --scripts ./oracle-instantclient11.2-devel-11.2.0.4.0-1.x86_64.rpm && \

@@ -14,7 +14,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   # -- mbstring lib
-  libonig-dev \ 
+  libonig-dev \
   # -- gd lib
   # libpng-dev \
   # libjpeg-dev \
@@ -25,7 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libpq-dev \
   zip \
   unzip && \
-  cp env .env && \
   # -- PHP Ext
   docker-php-ext-install intl mbstring pdo pdo_mysql && \
   # docker-php-ext-configure gd && \
