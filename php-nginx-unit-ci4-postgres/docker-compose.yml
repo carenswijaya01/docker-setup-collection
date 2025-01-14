@@ -20,4 +20,4 @@ services:
       - "no-new-privileges=true"
     volumes:
       - ./:/app
-    command: sh -c "composer install --no-dev --ignore-platform-reqs --no-interaction --no-plugins --no-scripts --prefer-dist && && /start.sh"
+    command: sh -c "composer install --no-dev --ignore-platform-reqs --no-interaction --no-plugins --no-scripts --prefer-dist && /start.sh"
