@@ -1,0 +1,19 @@
+services:
+  tf:
+    image: tensorflow:2.6.2-py3.6.9
+    container_name: tf
+    # volumes:
+    #   - .:/app
+    restart: always
+    network_mode: host
+    command: bash -c "echo 'Port 2222' >> /etc/ssh/sshd_config && service ssh start && tail -f /dev/null"
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
