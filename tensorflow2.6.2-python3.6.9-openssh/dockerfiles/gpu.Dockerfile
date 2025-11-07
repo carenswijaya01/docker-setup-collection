@@ -54,7 +54,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         pkg-config \
         software-properties-common \
         unzip \
-        openssh-server
+        openssh-server \
+        # new
+        protobuf-compiler \
+        libxml2 libxml2-dev \
+        nano
 
 # Install TensorRT if not building for PowerPC
 # NOTE: libnvinfer uses cuda11.1 versions
@@ -70,6 +74,31 @@ RUN echo 'root:your_password' | chpasswd
 RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
+# Installing CUDA 10.0
+COPY cuda_10.0.130_410.48_linux.run .
+COPY cuda_10.0.130.1_linux.run .
+COPY cudnn-10.0-linux-x64-v7.6.5.32.tgz .
+
+# Install CUDA 10.0
+RUN chmod +x cuda_10.0.130_410.48_linux.run && \
+    ./cuda_10.0.130_410.48_linux.run --silent --toolkit && \
+    rm cuda_10.0.130_410.48_linux.run
+
+# Apply CUDA 10.0 Patch
+RUN chmod +x cuda_10.0.130.1_linux.run && \
+    ./cuda_10.0.130.1_linux.run --silent --accept-eula && \
+    rm cuda_10.0.130.1_linux.run
+
+# Install cuDNN 7 for CUDA 10.0
+RUN tar -xzvf cudnn-10.0-linux-x64-v7.6.5.32.tgz && \
+    cp -P cuda/include/cudnn*.h /usr/local/cuda-10.0/include && \
+    cp -P cuda/lib64/libcudnn* /usr/local/cuda-10.0/lib64/ && \
+    chmod a+r /usr/local/cuda-10.0/include/cudnn*.h /usr/local/cuda-10.0/lib64/libcudnn* && \
+    rm -rf cudnn-10.0-linux-x64-v7.6.5.32.tgz cuda
+
+# Set CUDA 11.2 as default
+RUN rm /usr/local/cuda && ln -sf /usr/local/cuda-11.2 /usr/local/cuda
+
 # For CUDA profiling, TensorFlow requires CUPTI.
 ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
@@ -77,6 +106,7 @@ ENV LD_LIBRARY_PATH /usr/local/cuda/extras/CUPTI/lib64:/usr/local/cuda/lib64:$LD
 # dynamic linker run-time bindings
 RUN ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1 \
     && echo "/usr/local/cuda/lib64/stubs" > /etc/ld.so.conf.d/z-cuda-stubs.conf \
+    && echo "/usr/local/cuda-10.0/lib64" > /etc/ld.so.conf.d/cuda-10-0.conf \
     && ldconfig
 
 # See http://bugs.python.org/issue19846
@@ -101,8 +131,9 @@ RUN ln -s $(which python3) /usr/local/bin/python
 # Set --build-arg TF_PACKAGE_VERSION=1.11.0rc0 to install a specific version.
 # Installs the latest version by default.
 ARG TF_PACKAGE=tensorflow
-ARG TF_PACKAGE_VERSION=
-RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}}
+ARG TF_PACKAGE_VERSION=2.6.2
+RUN python3 -m pip install --no-cache-dir ${TF_PACKAGE}${TF_PACKAGE_VERSION:+==${TF_PACKAGE_VERSION}} && \
+    python3 -m pip install pipenv pycocotools
 
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
